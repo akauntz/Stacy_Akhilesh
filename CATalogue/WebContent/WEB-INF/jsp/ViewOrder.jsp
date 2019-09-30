@@ -21,7 +21,7 @@
     	out.println(item.getQuantity() + "\n");
     }
     %>
-    		<td colspan="3"><input type="submit" value="Confirm Order"></td>
+    <td colspan="3"><input type="submit" value="Confirm Order"></td>
     
 </form:form>
 
