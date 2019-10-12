@@ -9,11 +9,12 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Order Confirmation</title>
 </head>
 <body>
-<form:form method="post" action="confirmOrder">
-
+<jsp:include page="Header.jsp"/>
+<form:form method="post" action="confirmOrder" class="text-center">
+<h4 class="text-center">
     <%
     Order order = (Order) request.getSession().getAttribute("order");
     for(Item item : order.getItems()) {
@@ -21,9 +22,12 @@
     	out.println(item.getQuantity() + "\n");
     }
     %>
-    <td colspan="3"><input type="submit" value="Confirm Order"></td>
-    
+</h4>
+ <br />  <br />
+ 	<div class="text-center"><input class="btn-primary btn-md"  type="submit" value="Confirm Order"></div>
+     <h5 class="text-center">Please click on Confirm Order to confirm your order. Order once placed cannot be cancelled.</h5>
+     
 </form:form>
-
+<jsp:include page="Footer.jsp"/>
 </body>
 </html>
