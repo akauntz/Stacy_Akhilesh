@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.osu.cse52234.util.ServiceLocator;
+import edu.osu.cse5234.business.OrderProcessingServiceBean;
+import edu.osu.cse5234.business.view.Inventory;
+import edu.osu.cse5234.business.view.InventoryService;
 import edu.osu.cse5234.model.Item;
 import edu.osu.cse5234.model.Order;
 import edu.osu.cse5234.model.PaymentInfo;
@@ -29,7 +33,13 @@ public class PurchaseController {
 	@RequestMapping(path = "/submitItems", method = RequestMethod.POST)
 	public String submitItems(@ModelAttribute("order") Order order, HttpServletRequest request) {
 		request.getSession().setAttribute("order", order);
-		return "redirect:/purchase/paymentEntry";
+		OrderProcessingServiceBean opsb =ServiceLocator.getOrderProcessingService();
+		if(opsb.validateItemAvailability(order)) {
+			return "redirect:/purchase/paymentEntry";
+		} else {
+			//("Please resubmit item quantities");
+			return "redirect:OrderEntryForm";
+		}
 	}
 
 
@@ -63,43 +73,20 @@ public class PurchaseController {
 	}
 	
 	private Order getInitialOrder(){
-		List<Item> items = new ArrayList<>();
+		InventoryService iS = ServiceLocator.getInventoryService();
+		Inventory inv = iS.getAvailableInventory();
+		List<Item> items = inv.getItemsInv();
 		Order order = new Order();
-		Item cat_1 = new Item();
-		cat_1.setName("Extra fluffy cat");
-		cat_1.setPrice("5.00");
-		
-		items.add(cat_1);
+		order.setItems(items);
 
-		Item cat_2 = new Item();
-		cat_2.setName("Extra extra fluffy cat");
-		cat_2.setPrice("5.50");
-		items.add(cat_2);
-		
-		Item cat_3 = new Item();
-		cat_3.setName("Soft cat");
-		cat_3.setPrice("3.00");
-		order.setItems(items);
-		items.add(cat_3);
-		
-		Item cat_4 = new Item();
-		cat_4.setName("Super soft cat");
-		cat_4.setPrice("3.50");
-		order.setItems(items);
-		items.add(cat_4);
-
-		Item cat_5 = new Item();
-		cat_5.setName("Nice cat");
-		cat_5.setPrice("1.00");
-		items.add(cat_5);
-		
-		
-		order.setItems(items);
 		return order;
 	}
 
 	@RequestMapping(path = "confirmOrder", method = RequestMethod.POST)
 	public String confirmOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		OrderProcessingServiceBean opsb= new OrderProcessingServiceBean();
+		String conf = opsb.processOrder(getInitialOrder());
+		//.getSession().setAttribute
 		return "redirect:/purchase/viewConfirmation";
 	}
 	
