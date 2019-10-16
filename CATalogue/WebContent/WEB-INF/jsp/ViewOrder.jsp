@@ -18,8 +18,10 @@
     <%
     Order order = (Order) request.getSession().getAttribute("order");
     for(Item item : order.getItems()) {
-    	out.println(item.getName() + "\n");
-    	out.println(item.getQuantity() + "\n");
+    	if (!item.getQuantity().equals("")){
+    		out.println(item.getName() + "\n");
+    		out.println(item.getQuantity() + "\n");
+    	}
     }
     %>
 </h4>

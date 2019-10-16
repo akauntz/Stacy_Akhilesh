@@ -14,12 +14,20 @@
 <form:form modelAttribute="order" method="post" action="purchase/submitItems">
 
 <div class="container">
+<h3 class="text-center"></h3>
+ <%String resub = (String) request.getSession().getAttribute("resubmit");
+ if (resub!=null){
+	 out.println(resub);
+ }
+
+%>
+<br /><br />
 <h3 class="text-center">Pick your Cat!</h3><br /><br />
 <div class="row">
 <div class="col-xs-2"></div>
 <div class="col-xs-8">
 <table class="table table-striped table-bordered" style="font-size: 17px">
-	    <th>Available Items for Purchase</th>
+		<th>Available Items for Purchase</th>
 	    <th>Price</th>
 	    <th>Quantity</th>
 	<c:forEach items="${order.items}" var="item" varStatus="loop">

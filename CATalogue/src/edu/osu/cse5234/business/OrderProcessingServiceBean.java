@@ -26,7 +26,7 @@ public class OrderProcessingServiceBean {
     	if(iS.validateQuantity(order.getItems())) {
     		iS.updateInventory(order.getItems());
     	}
-    	return "";
+    	return "8030";
     }
 
     public boolean validateItemAvailability(Order order) {

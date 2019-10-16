@@ -1,5 +1,4 @@
 package edu.osu.cse5234.controller;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +34,11 @@ public class PurchaseController {
 		request.getSession().setAttribute("order", order);
 		OrderProcessingServiceBean opsb =ServiceLocator.getOrderProcessingService();
 		if(opsb.validateItemAvailability(order)) {
-			return "redirect:/purchase/paymentEntry";
+			return "redirect:/purchase/shippingEntry";
 		} else {
-			//("Please resubmit item quantities");
-			return "redirect:OrderEntryForm";
+			String resub= "Please resubmit item quantities";
+			request.getSession().setAttribute("resubmit", resub);
+			return "redirect:/purchase";
 		}
 	}
 
@@ -86,7 +86,7 @@ public class PurchaseController {
 	public String confirmOrder(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		OrderProcessingServiceBean opsb= new OrderProcessingServiceBean();
 		String conf = opsb.processOrder(getInitialOrder());
-		//.getSession().setAttribute
+		request.getSession().setAttribute("confirmationNo",conf);
 		return "redirect:/purchase/viewConfirmation";
 	}
 	
