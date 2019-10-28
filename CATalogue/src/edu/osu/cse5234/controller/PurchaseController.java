@@ -14,6 +14,7 @@ import edu.osu.cse5234.business.OrderProcessingServiceBean;
 import edu.osu.cse5234.business.view.Inventory;
 import edu.osu.cse5234.business.view.InventoryService;
 import edu.osu.cse5234.model.Item;
+import edu.osu.cse5234.model.LineItem;
 import edu.osu.cse5234.model.Order;
 import edu.osu.cse5234.model.PaymentInfo;
 import edu.osu.cse5234.model.ShippingInfo;
@@ -75,7 +76,7 @@ public class PurchaseController {
 	private Order getInitialOrder(){
 		InventoryService iS = ServiceLocator.getInventoryService();
 		Inventory inv = iS.getAvailableInventory();
-		List<Item> items = inv.getItemsInv();
+		List<LineItem> items = inv.getItemsInv();
 		Order order = new Order();
 		order.setItems(items);
 
