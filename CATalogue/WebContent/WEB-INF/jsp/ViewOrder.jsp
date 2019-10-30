@@ -1,5 +1,5 @@
 <%@ page import="edu.osu.cse5234.model.Order" %>
-<%@ page import="edu.osu.cse5234.model.Item" %>
+<%@ page import="edu.osu.cse5234.model.LineItem" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -17,11 +17,9 @@
 <h4 class="text-center">
     <%
     Order order = (Order) request.getSession().getAttribute("order");
-    for(Item item : order.getItems()) {
-    	if (!item.getQuantity().equals("")){
-    		out.println(item.getName() + "\n");
-    		out.println(item.getQuantity() + "\n");
-    	}
+    for(LineItem item : order.getItems()) {
+   		out.println(item.getItemName() + "\n");
+   		out.println(item.getQuantity() + "\n");
     }
     %>
 </h4>
