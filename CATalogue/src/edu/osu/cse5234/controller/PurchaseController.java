@@ -134,7 +134,6 @@ import edu.osu.cse5234.model.LineItem;
 import edu.osu.cse5234.model.Order;
 import edu.osu.cse5234.model.PaymentInfo;
 import edu.osu.cse5234.model.ShippingInfo;
-//import edu.osu.cse5234.util.ServiceLocator;
 import edu.osu.cse52234.util.ServiceLocator;
 
 @Controller

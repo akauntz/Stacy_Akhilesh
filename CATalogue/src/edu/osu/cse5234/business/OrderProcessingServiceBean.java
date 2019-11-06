@@ -5,14 +5,23 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.xml.ws.WebServiceRef;
+
+import com.chase.payment.CreditCardPayment;
+import com.chase.payment.PaymentProcessor;
+import com.chase.payment.PaymentProcessorService;
+import com.ups.shipping.client.ShippingInitiationClient;
 
 import edu.osu.cse52234.util.ServiceLocator;
 import edu.osu.cse5234.business.view.InventoryService;
 import edu.osu.cse5234.model.Item;
 import edu.osu.cse5234.model.LineItem;
 import edu.osu.cse5234.model.Order;
+import edu.osu.cse5234.model.PaymentInfo;
 
 /**
  * Session Bean implementation class OrderProcessingServiceBean
@@ -21,9 +30,14 @@ import edu.osu.cse5234.model.Order;
 @LocalBean
 public class OrderProcessingServiceBean {
 
+	private static String shippingResourceURI = "http://localhost:9080/UPS/jaxrs";
+	
 	@PersistenceContext
 	EntityManager entityManager;
 	
+	@WebServiceRef(wsdlLocation =
+			 "http://localhost:9080/ChaseBankApplication/PaymentProcessorService?wsdl")
+			 private PaymentProcessorService service;
     /**
      * Default constructor. 
      */
@@ -36,9 +50,36 @@ public class OrderProcessingServiceBean {
 //    	if(iS.validateQuantity(order.getItems())) {
 //    		iS.updateInventory(order.getItems());
 //    	}
-//    	return "8030";
     	entityManager.persist(order);
     	entityManager.flush();
+    	
+    	CreditCardPayment creditCardPayment= new CreditCardPayment();
+    	PaymentInfo payment = order.getPayment();
+    	creditCardPayment.setCardHolderName(payment.getCardHolderName());
+    	creditCardPayment.setCvvCode(payment.getCvvCode());
+    	creditCardPayment.setExpirationDate(payment.getExpirationDate());
+    	creditCardPayment.setCreditCardNumber(payment.getCreditCardNumber());
+    	creditCardPayment.setId(payment.getId());
+
+    	//service.getPaymentProcessorPort().processPayment(creditCardPayment);
+
+    	ShippingInitiationClient client =  new ShippingInitiationClient(shippingResourceURI);
+    	
+    	String size = Integer.toString(order.getItems().size());
+    	
+    	JsonObject requestJson = Json.createObjectBuilder()
+    			.add("Zip", "43201")
+    			.add("Organization", "CATalogue")
+    			.add("OrderRefId", "1234")
+    			.add("ItemsNumber", size)
+    			.build();
+    	
+    	
+    	JsonObject responseJson = client.invokeInitiateShipping(requestJson);
+    	System.out.println("UPS accepted request? " + responseJson.getBoolean("Accepted"));
+    	System.out.println("Shipping Reference Number: " +
+    	responseJson.getInt("ShippingReferenceNumber"));
+    	
     	return "hi";
     }
 

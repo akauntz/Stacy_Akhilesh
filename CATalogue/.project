@@ -3,7 +3,6 @@
 	<name>CATalogue</name>
 	<comment></comment>
 	<projects>
-		<project>CATalogue-EJBClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
