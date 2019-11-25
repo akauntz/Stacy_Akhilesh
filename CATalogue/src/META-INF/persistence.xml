@@ -6,7 +6,6 @@
 		<class>edu.osu.cse5234.model.Order</class>
 		<class>edu.osu.cse5234.model.PaymentInfo</class>
 		<class>edu.osu.cse5234.model.ShippingInfo</class>
-		<class>com.chase.payment.CreditCardPayment</class>
 		<properties>
 			<property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
 			<property name="eclipselink.weaving" value="false"/>
